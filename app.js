@@ -15,9 +15,13 @@ function createEnemies(ctx, canvas, enemyImg) {
 window.onload = async () => {
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
-	// TODO load textures
+	// draw black background
+	ctx.fillStyle = ("black");
+	ctx.fillRect(0, 0, 1024, 768);
 
-	// TODO draw black background
+	// load textures
+	const playerImg = await loadTexture("assets/player.png");
+	const enemyImg = await loadTexture("assets/enemyShip.png");
 	// TODO draw hero
 	// TODO uncomment the next line when you add enemies to screen
 	//createEnemies(ctx, canvas, enemyImg);
