@@ -22,7 +22,8 @@ window.onload = async () => {
 	// load textures
 	const playerImg = await loadTexture("assets/player.png");
 	const enemyImg = await loadTexture("assets/enemyShip.png");
-	// TODO draw hero
+	// draw hero
+	ctx.drawImage(playerImg, canvas.width/2-45, canvas.height-canvas.height/4);
 	// TODO uncomment the next line when you add enemies to screen
 	//createEnemies(ctx, canvas, enemyImg);
 };
