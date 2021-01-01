@@ -9,7 +9,7 @@ function loadTexture(path) {
 }
 
 function createEnemies(ctx, canvas, enemyImg) {
-	// TODO draw enemies
+	// draw enemies
 
 	const MONSTER_TOTAL = 5;
 	const MONSTER_WIDTH = MONSTER_TOTAL * 98;
@@ -29,14 +29,30 @@ window.onload = async () => {
 	ctx = canvas.getContext('2d');
 	// draw black background
 	ctx.fillStyle = ("black");
-	ctx.fillRect(0, 0, 1024, 768);
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	// load textures
 	const playerImg = await loadTexture("assets/player.png");
 	const enemyImg = await loadTexture("assets/enemyShip.png");
 	// draw hero
 	ctx.drawImage(playerImg, canvas.width / 2 - 45, canvas.height - canvas.height / 4);
-	// TODO uncomment the next line when you add enemies to screen
+	// add enemies to screen
 	createEnemies(ctx, canvas, enemyImg);
 
 };
+
+class GameObject {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+		this.dead = false;
+		this.type = "";
+		this.width = 0;
+		this.height = 0;
+		this.img = undefined;
+	}
+
+	draw(ctx) {
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+	}
+}
