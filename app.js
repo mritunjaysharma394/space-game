@@ -56,3 +56,42 @@ class GameObject {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 	}
 }
+
+class Hero extends GameObject {
+	constructor(x, y) {
+		//to add
+	}
+}
+
+class Enemy extends GameObject {
+	constructor(x, y) {
+		super(x, y);
+		(this.width = 98), (this.height = 50);
+		this.type = "Enemy";
+		let id = setInterval(() => {
+			if (this.y < canvas.height - this.height) {
+				this.y += 5;
+			} else {
+				console.log('Stopped at', this.y)
+				clearInterval(id);
+			}
+		}, 300)
+	}
+}
+
+let onKeyDown = function(e) {
+	console.log(e.keyCode);
+	switch(e.keyCode) {
+		case 37:
+		case 38:
+		case 39:
+		case 40: //arrowKeys
+		case 32:
+			e.preventDefault();
+			break;
+		default:
+			break; // don't block other keys
+	}
+};
+
+window.addEventListener('keydown', onKeyDown);
