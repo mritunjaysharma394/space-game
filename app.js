@@ -79,9 +79,9 @@ class Enemy extends GameObject {
 	}
 }
 
-let onKeyDown = function(e) {
+let onKeyDown = function (e) {
 	console.log(e.keyCode);
-	switch(e.keyCode) {
+	switch (e.keyCode) {
 		case 37:
 		case 38:
 		case 39:
@@ -95,3 +95,71 @@ let onKeyDown = function(e) {
 };
 
 window.addEventListener('keydown', onKeyDown);
+
+window.addEventListener("keyup", (evt) => {
+	if (evt.key === "ArrowUp") {
+		eventEmitter.emit(Messages.KEY_EVENT_UP);
+	} else if (evt.key === "ArrowDown") {
+		eventEmitter.emit(Messages.KEY_EVENT_DOWN);
+	} else if (evt.key === "ArrowLeft") {
+		eventEmitter.emit(Messages.KEY_EVENT_LEFT);
+	} else if (evt.key === "ArrowRight") {
+		eventEmitter.emit(Messages.KEY_EVENT_RIGHT);
+	}
+});
+
+class EventEmitter {
+	constructor() {
+		this.listeners = {};
+	}
+
+	on(message, listener) {
+		if (!this.listeners[message]) {
+			this.listeners[message] = [];
+		}
+		this.listeners[message].push(listener);
+	}
+
+	emit(message, payload = null) {
+		if (this.listeners[message]) {
+			this.listeners[message].forEach((l) => l(message, load));
+		}
+	}
+}
+
+const Messages = {
+	KEY_EVENT_UP: "KEY_EVENT_UP",
+	KEY_EVENT_DOWN: "KEY_EVENT_DOWN",
+	KEY_EVENT_LEFT: "KEY_EVENT_LEFT",
+	KEY_EVENT_RIGHT: "KEY_EVENT_RIGHT",
+};
+
+let heroImg,
+	enemyImg,
+	laserImg,
+	canvas, ctx,
+	gameObjects = [],
+	hero,
+	eventEmitter = new EventEmitter();
+
+function initGame() {
+	gameObjects = [];
+	createEnemies();
+	createHero();
+
+	eventEmitter.on(Messages.KEY_EVENT_UP, () => {
+		hero.y -= 5;
+	});
+
+	eventEmitter.on(Messages.KEY_EVENT_DOWN, () => {
+		hero.y += 5;
+	});
+
+	eventEmitter.on(Messages.KEY_EVENT_LEFT, () => {
+		hero.x -= 5;
+	});
+
+	eventEmitter.on(Messages.KEY_EVENT_RIGHT, () => {
+		hero.x += 5;
+	});
+}
