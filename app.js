@@ -31,6 +31,15 @@ class GameObject {
 	draw(ctx) {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 	}
+
+	rectFromGameObject() {
+		return {
+		  top: this.y,
+		  left: this.x,
+		  bottom: this.y + this.height,
+		  right: this.x + this.width,
+		};
+	  }
 }
 
 class Hero extends GameObject {
@@ -171,6 +180,15 @@ function initGame() {
 		hero.x += 5;
 	});
 }
+
+function intersectRect(r1, r2) {
+	return !(
+	  r2.left > r1.right ||
+	  r2.right < r1.left ||
+	  r2.top > r1.bottom ||
+	  r2.bottom < r1.top
+	);
+  }
 
 window.onload = async () => {
 	canvas = document.getElementById('canvas');
