@@ -70,6 +70,22 @@ class Enemy extends GameObject {
 	}
 }
 
+class Laser extends GameObject {
+	constructor(x, y) {
+	  super(x,y);
+	  (this.width = 9), (this.height = 33);
+	  this.type = 'Laser';
+	  this.img = laserImg;
+	  let id = setInterval(() => {
+		if (this.y > 0) {
+		  this.y -= 15;
+		} else {
+		  this.dead = true;
+		  clearInterval(id);
+		}
+	  }, 100)
+	}
+  }
 
 function loadTexture(path) {
 	return new Promise((resolve) => {
@@ -128,7 +144,9 @@ window.addEventListener('keyup', (evt) => {
 		eventEmitter.emit(Messages.KEY_EVENT_LEFT);
 	} else if (evt.key === 'ArrowRight') {
 		eventEmitter.emit(Messages.KEY_EVENT_RIGHT);
-	}
+	} else if(evt.keyCode === 32) {
+		eventEmitter.emit(Messages.KEY_EVENT_SPACE);
+	  }
 });
 
 function createEnemies() {
@@ -182,7 +200,13 @@ function initGame() {
 	eventEmitter.on(Messages.KEY_EVENT_RIGHT, () => {
 		hero.x += 5;
 	});
-}
+
+	eventEmitter.on(Messages.KEY_EVENT_SPACE, () => {
+		if (hero.canFire()) {
+		  hero.fire();
+		}
+	});
+
 
 function intersectRect(r1, r2) {
 	return !(
