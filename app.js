@@ -206,7 +206,7 @@ function initGame() {
 		  hero.fire();
 		}
 	});
-
+}
 
 function intersectRect(r1, r2) {
 	return !(
