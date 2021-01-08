@@ -206,15 +206,7 @@ function initGame() {
 		  hero.fire();
 		}
 	});
-<<<<<<< HEAD
 
-	eventEmitter.on(Messages.COLLISION_ENEMY_LASER, (_, { first, second }) => {
-		first.dead = true;
-		second.dead = true;
-	  });
-
-=======
->>>>>>> 2acb535b91d27420c63e3dabf35c460c03ff6dfe
 }
 
 function intersectRect(r1, r2) {
