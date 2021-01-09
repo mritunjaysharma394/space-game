@@ -52,6 +52,8 @@ class Hero extends GameObject {
 			y: 0
 		};
 		this.cooldown = 0;
+		this.life = 3;
+		this.points = 0;
 	}
 	fire() {
 		gameObjects.push(new Laser(this.x + 45, this.y - 10));
@@ -128,6 +130,7 @@ const Messages = {
 let playerImg,
 	enemyImg,
 	laserImg,
+	lifeImg,
 	canvas, ctx,
 	gameObjects = [],
 	hero,
@@ -196,6 +199,27 @@ function drawGameObjects(ctx) {
 	gameObjects.forEach((go) => go.draw(ctx));
 }
 
+function drawLife() {
+	const START_POS = canvas.width - 180;
+	for (let i = 0; i < hero.life; i++) {
+		ctx.drawImage(
+			lifeImg,
+			START_POS + (45 * (i + 1)),
+			canvas.height - 37);
+	}
+}
+
+function drawPoints() {
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "red";
+	ctx.textAlign = "left";
+	drawText("Points: " + hero.points, 10, canvas.height - 20);
+}
+
+function drawText(message, x, y) {
+	ctx.fillText(message, x, y);
+}
+
 function initGame() {
 	gameObjects = [];
 	createEnemies();
@@ -256,6 +280,15 @@ function updateGameObjects() {
 			}
 		});
 	});
+	enemies.forEach(enemy => {
+		const heroRect = hero.rectFromGameObject();
+		if (intersectRect(heroRect, enemy.rectFromGameObject())) {
+			eventEmitter.emit(Messages.COLLISION_ENEMY_HERO, {
+				enemy
+			});
+		}
+	});
+
 	gameObjects = gameObjects.filter(go => !go.dead);
 }
 
@@ -267,6 +300,7 @@ window.onload = async () => {
 	playerImg = await loadTexture("assets/player.png");
 	enemyImg = await loadTexture("assets/enemyShip.png");
 	laserImg = await loadTexture("assets/laserRed.png");
+	lifeImg = await loadTexture("assets/life.png");
 
 	initGame();
 	let gameLoopId = setInterval(() => {
@@ -274,6 +308,8 @@ window.onload = async () => {
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		updateGameObjects();
+		drawPoints();
+		drawLife();
 		drawGameObjects(ctx);
 	}, 100);
 };
