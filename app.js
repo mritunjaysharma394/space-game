@@ -54,7 +54,7 @@ class Hero extends GameObject {
 		this.cooldown = 0;
 	}
 	fire() {
-		gameObjects.push(new Laser(this.x + 45, this,y - 10));
+		gameObjects.push(new Laser(this.x + 45, this.y - 10));
 		this.cooldown = 500;
 
 		let id = setInterval(() => {
@@ -273,7 +273,7 @@ window.onload = async () => {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		drawGameObjects(ctx);
 		updateGameObjects();
+		drawGameObjects(ctx);
 	}, 100);
 };
