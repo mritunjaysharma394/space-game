@@ -51,6 +51,22 @@ class Hero extends GameObject {
 			x: 0,
 			y: 0
 		};
+		this.cooldown = 0;
+	}
+	fire() {
+		gameObjects.push(new Laser(this.x + 45, this,y - 10));
+		this.cooldown = 500;
+
+		let id = setInterval(() => {
+			if (this.cooldown > 0) {
+				this.cooldown -= 100;
+			} else {
+				clearInterval(id);
+			}
+		}, 200);
+	}
+	canFire() {
+		return this.cooldown === 0;
 	}
 }
 
