@@ -1,3 +1,5 @@
+let gameLoopId;
+
 class EventEmitter {
 	constructor() {
 		this.listeners = {};
@@ -14,6 +16,10 @@ class EventEmitter {
 		if (this.listeners[message]) {
 			this.listeners[message].forEach((l) => l(message, payload));
 		}
+	}
+
+	clear() {
+		this.listeners = {};
 	}
 }
 
@@ -234,6 +240,13 @@ function drawText(message, x, y) {
 	ctx.fillText(message, x, y);
 }
 
+function displayMessage(message, color = "red") {
+	ctx.font = "30px Arial";
+	ctx.fillStyle = color;
+	ctx.textAlign = "center";
+	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+}
+
 function isHeroDead() {
 	return hero.life <= 0;
 }
@@ -241,6 +254,43 @@ function isHeroDead() {
 function isEnemiesDead() {
 	const enemies = gameObjects.filter((go) => go.type === "Enemy" && !go.dead);
 	return enemies.length === 0;
+}
+
+function endGame(win) {
+	clearInterval(gameLoopId);
+
+	setTimeout(() => {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		if (win) {
+			displayMessage(
+				"Victory!!! Pew Pew... - Press [Enter] to start a new game Captain Pew Pew",
+				"green"
+			);
+		} else {
+			displayMessage(
+				"You died !!! Press [Enter] to start a new game Captain Pew Pew"
+			);
+		}
+	}, 200);
+}
+
+function resetGame() {
+	if (gameLoopId) {
+		clearInterval(gameLoopId);
+		eventEmitter.clear();
+		initGame();
+		gameLoopId = setInterval(() => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "black";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			drawPoints();
+			drawLife();
+			updateGameObjects();
+			drawGameObjects(ctx);
+		}, 100);
+	}
 }
 
 function initGame() {
@@ -313,6 +363,10 @@ function initGame() {
 		endGame(false);
 	});
 
+	eventEmitter.on(Messages.KEY_EVENT_ENTER, () => {
+		resetGame();
+	});
+
 }
 
 function intersectRect(r1, r2) {
@@ -361,7 +415,7 @@ window.onload = async () => {
 	lifeImg = await loadTexture("assets/life.png");
 
 	initGame();
-	let gameLoopId = setInterval(() => {
+	gameLoopId = setInterval(() => {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
